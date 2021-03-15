@@ -1,0 +1,24 @@
+import(SC2P)
+import(pheatmap)
+import(MAST)
+import(Biobase)
+import(limma)
+import(ggplot2)
+import(RColorBrewer)
+import(grDevices)
+import(SingleCellExperiment)
+import(SummarizedExperiment)
+importFrom(SummarizedExperiment, colData, assays)
+
+export(
+    Est2Phase,
+    GenerateCountMatrix,
+    Simulate2SCE,
+    SimulateMultiSCEs,
+    runDE,
+    Power_Disc,
+    Power_Cont,
+    runPOWSC,
+    plot.POWSC,
+    summary.POWSC
+)
