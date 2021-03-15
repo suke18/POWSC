@@ -22,7 +22,7 @@ Imports:
     pheatmap
 LazyData: true
 biocViews: 	DifferentialExpression, ImmunoOncology, SingleCell, Software
-Depends: R (>= 4.0.2), Biobase, limma, SingleCellExperiment, MAST, SC2P
+Depends: R (>= 4.0.2), Biobase, limma, SingleCellExperiment, MAST
 Suggests: 
     knitr,
     rmarkdown
