@@ -53,7 +53,7 @@ estPower2 = Power_Cont(de, simData = simData)
 
 #### (2). For multiple-group comparisons
 In the second scenario, the numbers of cells for distinct cell types can be very different, so the power for DE highly depends on the mixing proportions.
-```{r multiple-group, eval = F}
+```{r multiple-group, eval = FALSE}
 sim_size = 1000
 cell_per = c(0.2, 0.3, 0.5)
 data("GSE67835")
