@@ -30,19 +30,19 @@ shrink.mu=function(y,s,n){
     k=which(n>1)
     if (length(k)<length(n)) {fill=TRUE} else {fill=FALSE}
     s=s[k];y=y[k];n=n[k]
-
+    
     mu0=weighted.mean(y,w=n)
-
+    
     s2.total=sum(s^2*(n-1))+sum(n*(y-mu0)^2)
     s2.total=s2.total/sum(n)
-
+    
     s2.1=sum(s^2*(n-1))/sum(n)
     s2.0=s2.total-s2.1
     ### shrink mu
     mu.sub=  (y*n/s2.1+mu0/s2.0)/(n/s2.1+1/s2.0)
     mu.g[k]=mu.sub
     if (fill) mu.g[-k]=mu0
-
+    
     mu.g
 }
 
@@ -65,7 +65,7 @@ dLNP2 <- function(x, mu, sigma, l=1){
 
 
 
-#### for the use of SC2P
+### for the use of SC2P
 eset2Phase <- function(eset, low.prob=0.99){  ## takes eSet as input
     Y <- round(exprs(eset))
     #################################################
