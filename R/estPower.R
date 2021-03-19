@@ -111,12 +111,7 @@ Power_Cont = function(DErslt, simData, alpha = 0.1, delta = 0.5, strata = c(0,10
 #' @param strata can be modified by the user. By default, it is (0, 0.2], (0.2, 0.4], (0.4, 0.6], (0.6, 0.8], (0.8, 1]
 #' @return a list of metrics for power analysis such as: stratified targeted power and marginal power.
 #' @examples
-#' data("es_mef_sce")
-#' sce = es_mef_sce[, colData(es_mef_sce)$cellTypes == "fibro"]
-#' estParas = Est2Phase(sce)
-#' simData = Simulate2SCE(n=100, estParas1 = estParas, estParas2 = estParas)
-#' DErslt = runDE(simData$sce)
-#' Disc_pow = Power_Disc(DErslt, simData)
+#' estPower1 = Power_Disc(de, simData = simData)
 #' @export Power_Disc
 ## Discreate case corresponding to the Phase I DE, delta means pi.df
 Power_Disc = function(DErslt, simData, alpha = 0.1, delta = 0.1, strata = seq(0, 1, by = 0.2)){
