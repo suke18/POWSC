@@ -22,6 +22,9 @@ plot the result use visualization.
 \examples{
 data("es_mef_sce")
 sce = es_mef_sce[, colData(es_mef_sce)$cellTypes == "fibro"]
+set.seed(123)
+rix = sample(1:nrow(sce), 1000)
+sce = sce[rix, ]
 est_Paras = Est2Phase(sce)
 sim_size = c(100, 400) # A numeric vector
 pow_rslt = runPOWSC(sim_size = sim_size, est_Paras = est_Paras,per_DE=0.05, DE_Method = "MAST", Cell_Type = "PW") # Note, using our previous developed tool SC2P is faster.

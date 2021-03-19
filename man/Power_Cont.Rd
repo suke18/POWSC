@@ -34,8 +34,11 @@ These parameters include four gene-wise parameters and two cell-wise parameters.
 \examples{
 data("es_mef_sce")
 sce = es_mef_sce[, colData(es_mef_sce)$cellTypes == "fibro"]
+set.seed(123)
+rix = sample(1:nrow(sce), 1000)
+sce = sce[rix, ]
 estParas = Est2Phase(sce)
-simData = Simulate2SCE(n=100, estParas1 = estParas, estParas2 = estParas)
+simData = Simulate2SCE(n=500, estParas1 = estParas, estParas2 = estParas)
 DErslt = runDE(simData$sce)
-Disc_cont = Power_Cont(DErslt, simData)
+Cont_pow = Power_Cont(DErslt, simData)
 }

@@ -18,21 +18,19 @@ toEset = function(sce){
 
 ##### This is the function from the https://github.com/haowulab/SC2P/blob/master/R/twoPhaseDE.R.
 ##### Since it is from github not CRAN or Bioconductor, I modify for POWSC usage on Bioconductor.
-twoPhaseDE <- function(sc2p.obj,
+twoPhaseDE <- function(norm,
                        design, ## vector of covariate names
                        test.which, ## which of design to be tested?
                        low.prob=.99){
-    Y <- sc2p.obj$exprs
-    Z <- sc2p.obj$Z
-    Offset <- sc2p.obj$Offset
+    Y <- norm$exprs
+    Z <- norm$Z
+    Offset <- norm$Offset
 
-    offset = match.arg(offset)
     k = colSums(Y)
     k = log2(k/median(k))
     Offset = matrix(rep(k, nrow(Y)), nrow=nrow(Y), byrow=TRUE)
 
-    X <- pData(sc2p.obj)[, design, drop=FALSE] ## or X can be permuted
-
+    X = norm$phenoData@data[, design, drop=FALSE] ## or X can be permuted
     twoPhaseDE0(Y=Y, Z=Z, X=X, Offset=Offset,
                 test.which=test.which, low.prob=low.prob)
 }
@@ -97,9 +95,13 @@ runMAST = function(sce) {
 #' @examples
 #' data("es_mef_sce")
 #' sce = es_mef_sce[, colData(es_mef_sce)$cellTypes == "fibro"]
+#' set.seed(123)
+#' rix = sample(1:nrow(sce), 1000)
+#' sce = sce[rix, ]
 #' estParas = Est2Phase(sce)
-#' simData = Simulate2SCE(n=100, estParas1 = estParas, estParas2 = estParas)
-#' DErslt = runDE(simData$sce)
+#' simData = Simulate2SCE(n=500, estParas1 = estParas, estParas2 = estParas)
+#' sim_sce = simData$sce
+#' DErslt = runDE(sim_sce)
 #' @export runDE
 runDE = function(sce, DE_Method = c("MAST", "SC2P")){
     DE_Method = match.arg(DE_Method)

@@ -30,19 +30,19 @@ shrink.mu=function(y,s,n){
     k=which(n>1)
     if (length(k)<length(n)) {fill=TRUE} else {fill=FALSE}
     s=s[k];y=y[k];n=n[k]
-    
+
     mu0=weighted.mean(y,w=n)
-    
+
     s2.total=sum(s^2*(n-1))+sum(n*(y-mu0)^2)
     s2.total=s2.total/sum(n)
-    
+
     s2.1=sum(s^2*(n-1))/sum(n)
     s2.0=s2.total-s2.1
     ### shrink mu
     mu.sub=  (y*n/s2.1+mu0/s2.0)/(n/s2.1+1/s2.0)
     mu.g[k]=mu.sub
     if (fill) mu.g[-k]=mu0
-    
+
     mu.g
 }
 
@@ -65,7 +65,7 @@ dLNP2 <- function(x, mu, sigma, l=1){
 
 
 
-### for the use of SC2P
+#### for the use of SC2P
 eset2Phase <- function(eset, low.prob=0.99){  ## takes eSet as input
     Y <- round(exprs(eset))
     #################################################
@@ -191,6 +191,91 @@ eset2Phase <- function(eset, low.prob=0.99){  ## takes eSet as input
                experimentData=experimentData(eset),
                annotation=annotation(eset))
     out
+}
+
+
+
+##################################################
+twoPhaseDE0 <- function(Y, Z, X, Offset, test.which,
+                        low.prob=.99){
+    vars <- colnames(X);  vars0 <- vars[-test.which]
+    group <- X[, test.which]
+    group = as.factor(group)
+    if (!is.factor(group)){ stop("The variable to be tested must be a factor") }
+    group <- droplevels(group)
+    X[, test.which] <- group ## just putting it back for Phase II
+    Ng <- length(levels(group))
+    parse1 <- parse(text= paste0("glm(yyy~", paste(vars, collapse="+"),
+                                 ",data=X, family=binomial)"))
+    contrast <- paste0(vars[test.which], levels(group)[Ng])
+
+    ################################################
+    ## phase 1: change of on rate
+    ################################################
+    Z1=( Z > low.prob)^2
+    ## avgZ=tapply(1:ncol(Z), group, function(ind){
+    ##     rowMeans(Z[,ind]) })
+    ## avgZ=matrix(unlist(avgZ),ncol=Ng)
+    n.on=rowSums(Z1)
+    ind=which(n.on > 0 & n.on < ncol(Y))
+    if (length(vars)==1){ ## single binary variable
+        DE.z <- matrix(NA, nrow=nrow(Z), ncol=4)
+        rownames(DE.z) <- rownames(Y)
+        DE.z[ind, ]= t(apply(Z1[ind,], 1,function(yyy){
+            fit <- eval(parse1)
+            ss <- summary(fit)
+            coef <- ss$coef[contrast, "Estimate"]
+            pval <- pchisq(ss$null.deviance - ss$deviance,
+                           df=ss$df.null - ss$df.residual,
+                           lower.tail=FALSE)
+            c(mean(yyy[group==levels(group)[1]]),
+              mean(yyy[group==levels(group)[2]]),
+              coef, pval)
+        }))
+        colnames(DE.z) <- c("p1", "p2", "Ph1.coef", "Ph1.pval")
+    } else {
+        DE.z <- matrix(NA, nrow=nrow(Z), ncol=2)
+        rownames(DE.z) <- rownames(Y)
+        parse0 <- parse(text= paste0("glm(yyy~", paste(vars0, collapse="+"),
+                                     ",data=X, family=binomial)"))
+        DE.z[ind, ]= t(apply(Z1[ind,], 1,function(yyy){
+            fit1 <- eval(parse1); fit0 <- eval(parse0)
+            ss1 <- summary(fit1); ss0 <- summary(fit0)
+            coef <- ss1$coef[contrast, "Estimate"]
+            pval <- pchisq(ss0$deviance - ss1$deviance,
+                           df=ss0$df.residual - ss1$df.residual,
+                           lower.tail=FALSE)
+            c(coef, pval)
+        }))
+        colnames(DE.z) <- c("Ph1.coef", "Ph1.pval")
+    }
+
+    ##################################################
+    ## phase 2: conditional FC
+    ################################################
+    W <- log2(Y+1) - Offset; W[!Z1] <- NA
+    modelX <- eval(parse(text=paste0("model.matrix(~", paste(vars, collapse="+"),
+                                     ", data=X)")))
+    fit <- lmFit(W, modelX)
+    fit <- eBayes(fit)
+    mu1 <- fit$coef[,"(Intercept)"]
+    mu2 <- rowSums(fit$coef)
+    coef <- fit$coef[, contrast]
+    stdev <- fit$stdev.unscaled[, contrast]
+    delta <- qt(.975, fit$df.residual + fit$df.prior)*stdev*sqrt(fit$s2.post)
+    ci.lo <- coef - delta; ci.hi <- coef + delta
+    DE.y <- cbind(mu1, mu2, coef, ci.lo, ci.hi, fit$p.value[, contrast])
+    colnames(DE.y) <- c("m1", "m2", "Ph2.coef",
+                        "Ph2.ci.lo", "Ph2.ci.hi", "Ph2.pval")
+
+    ## ################################################
+    ## marginal logFC change
+    sel1 <- as.numeric(group)==1
+    sel2 <- as.numeric(group)==2
+    logFC <- apply(log2(Y+1), 1, function(y){
+        mean(y[sel2], na.rm=TRUE) - mean(y[sel1], na.rm=TRUE)
+    })
+    as.data.frame(cbind(DE.z, DE.y, logFC))
 }
 
 
