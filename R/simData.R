@@ -64,6 +64,9 @@ GenerateCountMatrix = function(pi.g, p0, lambda, mu, sigma, sf){
 #' @examples
 #' data("es_mef_sce")
 #' sce = es_mef_sce[, colData(es_mef_sce)$cellTypes == "fibro"]
+#' set.seed(123)
+#' rix = sample(1:nrow(sce), 500)
+#' sce = sce[rix, ]
 #' estParas = Est2Phase(sce)
 #' simData = Simulate2SCE(n=100, estParas1 = estParas, estParas2 = estParas)
 #' @export Simulate2SCE
@@ -152,13 +155,16 @@ Simulate2SCE = function(n = 100, perDE = 0.05, estParas1, estParas2) {
 #' @return a list of simulated datasets. Each dataset corresponds to a pair-wise comparison including a series of metrics such as the DE gene indices for Form I and II DE genes, and simulated expression data in singlecellexperiment format.
 #' @examples
 #' data("es_mef_sce")
+#' set.seed(123)
+#' rix = sample(1:nrow(es_mef_sce), 500)
+#' es_mef_sce = es_mef_sce[rix, ]
 #' sce1 = es_mef_sce[, colData(es_mef_sce)$cellTypes == "fibro"]
 #' estParas1 = Est2Phase(sce1)
 #' sce2 = es_mef_sce[, colData(es_mef_sce)$cellTypes == "stemCell"]
 #' estParas2 = Est2Phase(sce2)
 #' estParas_set = list(celltype1 = estParas1, celltype2 = estParas1, celltype3 =estParas2)
 #' multiProb = c(0.2, 0.3, 0.5)
-#' simData = SimulateMultiSCEs(n=1000, estParas_set = estParas_set, multiProb = multiProb)
+#' simData = SimulateMultiSCEs(n=200, estParas_set = estParas_set, multiProb = multiProb)
 #' @export SimulateMultiSCEs
 SimulateMultiSCEs = function(n = 1000, estParas_set, multiProb, delta1 = 0.1, delta2 = 0.5) {
     ## Initialize the simAll object

@@ -33,11 +33,14 @@ It simulates the DE changes in two forms corresponding two types of DE genes
 }
 \examples{
 data("es_mef_sce")
+set.seed(123)
+rix = sample(1:nrow(es_mef_sce), 500)
+es_mef_sce = es_mef_sce[rix, ]
 sce1 = es_mef_sce[, colData(es_mef_sce)$cellTypes == "fibro"]
 estParas1 = Est2Phase(sce1)
 sce2 = es_mef_sce[, colData(es_mef_sce)$cellTypes == "stemCell"]
 estParas2 = Est2Phase(sce2)
 estParas_set = list(celltype1 = estParas1, celltype2 = estParas1, celltype3 =estParas2)
 multiProb = c(0.2, 0.3, 0.5)
-simData = SimulateMultiSCEs(n=1000, estParas_set = estParas_set, multiProb = multiProb)
+simData = SimulateMultiSCEs(n=200, estParas_set = estParas_set, multiProb = multiProb)
 }

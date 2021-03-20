@@ -63,7 +63,7 @@ PowerEst = function(fdr, alpha, Zg, Zg2, xgr){
 #' data("es_mef_sce")
 #' sce = es_mef_sce[, colData(es_mef_sce)$cellTypes == "fibro"]
 #' set.seed(123)
-#' rix = sample(1:nrow(sce), 1000)
+#' rix = sample(1:nrow(sce), 500)
 #' sce = sce[rix, ]
 #' estParas = Est2Phase(sce)
 #' simData = Simulate2SCE(n=500, estParas1 = estParas, estParas2 = estParas)
@@ -117,7 +117,7 @@ Power_Cont = function(DErslt, simData, alpha = 0.1, delta = 0.5, strata = c(0,10
 #' data("es_mef_sce")
 #' sce = es_mef_sce[, colData(es_mef_sce)$cellTypes == "fibro"]
 #' set.seed(123)
-#' rix = sample(1:nrow(sce), 1000)
+#' rix = sample(1:nrow(sce), 500)
 #' sce = sce[rix, ]
 #' estParas = Est2Phase(sce)
 #' simData = Simulate2SCE(n=1000, estParas1 = estParas, estParas2 = estParas)

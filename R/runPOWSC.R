@@ -19,7 +19,7 @@
 #' rix = sample(1:nrow(sce), 500)
 #' sce = sce[rix, ]
 #' est_Paras = Est2Phase(sce)
-#' sim_size = c(100, 400) # A numeric vector
+#' sim_size = c(100, 200) # A numeric vector
 #' pow_rslt = runPOWSC(sim_size = sim_size, est_Paras = est_Paras,per_DE=0.05, DE_Method = "MAST", Cell_Type = "PW") # Note, using our previous developed tool SC2P is faster.
 #' @export
 runPOWSC = function(sim_size = c(50, 100, 200, 800, 1000), per_DE = 0.05, est_Paras, DE_Method = c("MAST", "SC2P"),
@@ -76,7 +76,7 @@ runPOWSC = function(sim_size = c(50, 100, 200, 800, 1000), per_DE = 0.05, est_Pa
 #' rix = sample(1:nrow(sce), 500)
 #' sce = sce[rix, ]
 #' est_Paras = Est2Phase(sce)
-#' sim_size = c(100, 400) # A numeric vector
+#' sim_size = c(100, 200) # A numeric vector
 #' pow_rslt = runPOWSC(sim_size = sim_size, est_Paras = est_Paras,per_DE=0.05, DE_Method = "MAST", Cell_Type = "PW") # Note, using our previous developed tool SC2P is faster.
 #' plot_POWSC(pow_rslt, Form="II", Cell_Type = "PW") # Alternatively, we can use Form="I")
 #' @export
@@ -160,7 +160,7 @@ plot_POWSC = function(POWSCobj, Form = c("I", "II"), Cell_Type = c("PW", "Multi"
 #' rix = sample(1:nrow(sce), 500)
 #' sce = sce[rix, ]
 #' est_Paras = Est2Phase(sce)
-#' sim_size = c(100, 400) # A numeric vector
+#' sim_size = c(100, 200) # A numeric vector
 #' pow_rslt = runPOWSC(sim_size = sim_size, est_Paras = est_Paras,per_DE=0.05, DE_Method = "MAST", Cell_Type = "PW") # Note, using our previous developed tool SC2P is faster.
 #' summary_POWSC(pow_rslt, Form="II", Cell_Type = "PW")
 #' @export

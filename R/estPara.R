@@ -8,6 +8,9 @@
 #' @examples
 #' data("es_mef_sce")
 #' sce = es_mef_sce[, colData(es_mef_sce)$cellTypes == "fibro"]
+#' set.seed(123)
+#' rix = sample(1:nrow(sce), 500)
+#' sce = sce[rix, ]
 #' estParas = Est2Phase(sce)
 #' @export Est2Phase
 Est2Phase = function(sce, low.prob=0.99){
