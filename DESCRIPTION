@@ -1,7 +1,7 @@
 Package: POWSC
 Type: Package
 Title: Simulation, power evaluation, and sample size recommendation for single cell RNA-seq
-Version: 0.99.6
+Version: 0.99.7
 Authors@R: c(person("Kenong","Su", email ="kenong.su@emory.edu", role = c("aut","cre")),person("Hao","Wu", email ="hao.wu@emory.edu", role ="aut"))
 Description:Determining the sample size for adequate power to detect statistical significance is a crucial step at the design stage for high-throughput experiments. 
             Even though a number of methods and tools are available for sample size calculation for microarray and RNA-seq in the context of differential expression (DE), 
