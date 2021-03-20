@@ -96,10 +96,10 @@ runMAST = function(sce) {
 #' data("es_mef_sce")
 #' sce = es_mef_sce[, colData(es_mef_sce)$cellTypes == "fibro"]
 #' set.seed(123)
-#' rix = sample(1:nrow(sce), 1000)
+#' rix = sample(1:nrow(sce), 500)
 #' sce = sce[rix, ]
 #' estParas = Est2Phase(sce)
-#' simData = Simulate2SCE(n=500, estParas1 = estParas, estParas2 = estParas)
+#' simData = Simulate2SCE(n=100, estParas1 = estParas, estParas2 = estParas)
 #' sim_sce = simData$sce
 #' DErslt = runDE(sim_sce)
 #' @export runDE
