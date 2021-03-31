@@ -71,7 +71,7 @@ PowerEst = function(fdr, alpha, Zg, Zg2, xgr){
 #' Cont_pow = Power_Cont(DErslt, simData)
 #' @export Power_Cont
 ## Continous case corresponding to the Phase II DE, delta means lfc
-Power_Cont = function(DErslt, simData, alpha = 0.1, delta = 0.5, strata = c(0,10,2^(1:4)*10,Inf)){
+Power_Cont = function(DErslt, simData, alpha = 0.1, delta = 0.5, strata = c(0,10,2^(seq_len(4))*10,Inf)){
     fdrvec = DErslt$cont$fdr
     lfc = simData$lfc
     ngenes = nrow(simData$sce)

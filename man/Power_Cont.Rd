@@ -10,7 +10,7 @@ Power_Cont(
   simData,
   alpha = 0.1,
   delta = 0.5,
-  strata = c(0, 10, 2^(1:4) * 10, Inf)
+  strata = c(0, 10, 2^(seq_len(4)) * 10, Inf)
 )
 }
 \arguments{

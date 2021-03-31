@@ -30,19 +30,19 @@ shrink.mu=function(y,s,n){
     k=which(n>1)
     if (length(k)<length(n)) {fill=TRUE} else {fill=FALSE}
     s=s[k];y=y[k];n=n[k]
-    
+
     mu0=weighted.mean(y,w=n)
-    
+
     s2.total=sum(s^2*(n-1))+sum(n*(y-mu0)^2)
     s2.total=s2.total/sum(n)
-    
+
     s2.1=sum(s^2*(n-1))/sum(n)
     s2.0=s2.total-s2.1
     ### shrink mu
     mu.sub=  (y*n/s2.1+mu0/s2.0)/(n/s2.1+1/s2.0)
     mu.g[k]=mu.sub
     if (fill) mu.g[-k]=mu0
-    
+
     mu.g
 }
 
@@ -112,7 +112,8 @@ eset2Phase <- function(eset, low.prob=0.99){  ## takes eSet as input
     #####  gene specific bg. Z_gi
     #######################
     den.fg = den.bg = NA*Y
-    for(i in 1:ncol(Y)){
+    ncell = ncol(Y)
+    for(i in seq_len(ncell)){
         den.bg[,i]=dZinf.pois(Y[,i], par1[1,i], par1[2,i])
         den.fg[,i]=dLNP2(x=Y[,i], mu=mu.g1, sigma=sd.g2, l=L[i])
     }
@@ -123,7 +124,7 @@ eset2Phase <- function(eset, low.prob=0.99){  ## takes eSet as input
 
     ### if I shrink mu.g
     den.fg2 = NA*Y
-    for (i in 1:ncol(Y)){
+    for (i in seq_len(ncell)){
         den.fg2[,i]= dLNP2(x=Y[,i], mu=mu.g2, sigma=sd.g2, l=L[i])
     }
     Z.fg2=sweep(den.fg2,2,1-pi0.hat,FUN="*")
@@ -135,7 +136,7 @@ eset2Phase <- function(eset, low.prob=0.99){  ## takes eSet as input
     Offset = Y*0
     Ylim=range(log2(1+Y)-mu.g1);Xlim=range(mu.g1)
 
-    for(i in 1:ncol(Y)){
+    for(i in seq_len(ncell)){
         tmp.y=log2(1+Y[,i])-mu.g2
         subset= post.Z2[,i] > .99
         tmp.Z2 = post.Z2[, i]

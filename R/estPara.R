@@ -29,6 +29,7 @@ Est2Phase = function(sce, low.prob=0.99){
         }
         RobustPoi0(yyy)
         })
+    ncell = ncol(sce)
     pi0.hat=Cell0/(par1[1,]+(1-par1[1,])*dpois(0,par1[2,]))
     if (any((pi0.hat > 1))) {warning("Zero proportion is greater than estimation.")}
     pi0.hat <- pmin(pi0.hat, 1)
@@ -59,7 +60,7 @@ Est2Phase = function(sce, low.prob=0.99){
     sd.g2=sqrt(sd.prior$var.post)
     #####  gene specific bg. Z_gi
     den.fg = den.bg = NA*Y
-    for(i in 1:ncol(Y)){
+    for(i in seq_len(ncell)){
         den.bg[,i]=dZinf.pois(Y[,i], par1[1,i], par1[2,i])
         den.fg[,i]=dLNP2(x=Y[,i], mu=mu.g1, sigma=sd.g2, l=L[i])
     }
@@ -70,7 +71,7 @@ Est2Phase = function(sce, low.prob=0.99){
 
     ### if I shrink mu.g
     den.fg2 = NA*Y
-    for (i in 1:ncol(Y)){
+    for (i in seq_len(ncell)){
         den.fg2[,i]= dLNP2(x=Y[,i], mu=mu.g2, sigma=sd.g2, l=L[i])
     }
     Z.fg2=sweep(den.fg2,2,1-pi0.hat,FUN="*")

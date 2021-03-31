@@ -35,7 +35,7 @@ GenerateCountMatrix = function(pi.g, p0, lambda, mu, sigma, sf){
 
     ## loop over cells to generate counts
     Y = matrix(0, nrow=G, ncol=N)
-    for(i in 1:N) {
+    for(i in seq_len(N)) {
         ix <- Z[,i] == 0
         Y[ix, i]  = rzip(sum(ix), p0[i], lambda[i])
         Y[!ix, i]  = rLNP(sum(!ix), mu[!ix], sigma[!ix], sf[i])
@@ -91,8 +91,8 @@ Simulate2SCE = function(n = 100, perDE = 0.05, estParas1, estParas2) {
     ## If DE genes are for genes with very small mean, they won't be detected.
     n0 = max(sum(mu1 > 3), sum(mu2 > 3))
     nDE1 = nDE2 = ngene * perDE
-    ix1.highGenes = order(mu1, decreasing=TRUE)[1:n0]
-    ix2.highGenes = order(mu2, decreasing=TRUE)[1:n0]
+    ix1.highGenes = order(mu1, decreasing=TRUE)[seq_len(n0)]
+    ix2.highGenes = order(mu2, decreasing=TRUE)[seq_len(n0)]
 
     ix.DE1 = sample(union(ix1.highGenes, ix2.highGenes), nDE1)
     ix.DE2 = sample(union(ix1.highGenes, ix2.highGenes), nDE2)
@@ -123,7 +123,7 @@ Simulate2SCE = function(n = 100, perDE = 0.05, estParas1, estParas2) {
     y1 = GenerateCountMatrix(pi.g1, p0.1, lambda1, mu1, sigma1, sf1)
     y2 = GenerateCountMatrix(pi.g2, p0.2, lambda2, mu2, sigma2, sf2)
     y = cbind(y1, y2)
-    rownames(y) = paste0("g", 1:nrow(y))
+    rownames(y) = paste0("g", seq_len(nrow(y)))
     celltypes = rep(paste0("celltype", c(1,2)), c(n1, n2))
     sce = SingleCellExperiment(
         assays = list(counts = y),
@@ -175,8 +175,8 @@ SimulateMultiSCEs = function(n = 1000, estParas_set, multiProb, delta1 = 0.1, de
     geneNames = rownames(estParas_set[[1]]$exprs)
 
     ## pairwisely simulate the data
-    for (i in 1:ncelltype){
-        for (j in i:ncelltype){
+    for (i in seq_len(ncelltype)){
+        for (j in seq_len(ncelltype)){
             if (j > i){
                 comID = c(i, j)
                 compName = paste0(celltypeNames[i], "_vs_", celltypeNames[j])

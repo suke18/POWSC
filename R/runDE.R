@@ -49,8 +49,10 @@ runSC2P = function(sce) {
     deSC2P = twoPhaseDE(norm, design = termTotest, test.which=1)
     discPval = deSC2P$Ph1.pval; discFdr = p.adjust(discPval, method = "fdr")
     contPval = deSC2P$Ph2.pval; contFdr = p.adjust(contPval, method = "fdr")
-    disc = data.frame(geneIndex = 1:length(discPval), pval = discPval, fdr = discFdr)
-    cont = data.frame(geneIndex = 1:length(contPval), pval = contPval, fdr = contFdr)
+    disLen = length(discPval)
+    conLen = length(contPval)
+    disc = data.frame(geneIndex = seq_len(disLen), pval = discPval, fdr = discFdr)
+    cont = data.frame(geneIndex = seq_len(conLen), pval = contPval, fdr = contFdr)
     rownames(disc) = rownames(cont) = rownames(deSC2P)
     return(list(table = deSC2P, cont = cont, disc = disc))
 }
@@ -76,10 +78,10 @@ runMAST = function(sce) {
     rslt = lrTest(fit, termTotest)  # fiting zlm model
     table = rslt[,,3]
     two.des = list()
-    for (i in 1:2){
+    for (i in seq_len(2)){
         pval = table[, i]
         fdr = p.adjust(pval, method = "fdr")
-        result = data.frame(geneIndex=1:length(pval), pval=pval, fdr=fdr)
+        result = data.frame(geneIndex=seq_len(length(pval)), pval=pval, fdr=fdr)
         res = result[complete.cases(result),]
         two.des[[i]] = res
     }
