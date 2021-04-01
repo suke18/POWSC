@@ -1,0 +1,13 @@
+citEntry(entry="article",
+         title = "Simulation, power evaluation and sample size recommendation for single-cell RNA-seq",
+         author = personList( as.person("Kenong Su"), as.person("Zhijin Wu"), as.person("Hao Wu")),
+         year = 2020,
+         journal = "Bioinformatics",
+         volume={36},
+  	 number={19},
+  	 pages={4860--4868},
+  	 year={2020},
+         textVersion =
+         paste("Kenong Su, Zhijin Wu, Hao Wu (2020):",
+               "Simulation, power evaluation and sample size recommendation for single-cell RNA-seq.",
+                "Bioinformatics. doi:10.1093/bioinformatics/btaa607" ) )

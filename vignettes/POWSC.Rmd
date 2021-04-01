@@ -49,7 +49,7 @@ BiocManager::install("POWSC")
 ### Quick start on using POWSC
 We use one scRNA-seq template data about ES-MEF cell types. 
 
-```{r setup, eval=TRUE}
+```{r setup, eval=TRUE, message=FALSE, results='hide'}
 suppressMessages(library(POWSC))
 data("es_mef_sce")
 sce = es_mef_sce[, colData(es_mef_sce)$cellTypes == "fibro"]
@@ -61,7 +61,7 @@ sim_size = c(100, 200) # A numeric vector
 pow_rslt = runPOWSC(sim_size = sim_size, est_Paras = est_Paras,per_DE=0.05, DE_Method = "MAST", Cell_Type = "PW") 
 ```
 
-## Abstract
+## Background
 Determining the sample size for adequate power to detect statistical significance is a crucial step at the design stage for high-throughput experiments. Even though a number of methods and tools are available for sample size calculation for microarray and RNA-seq under the context of differential expression, this topic in the field of single-cell RNA sequencing is understudied. Moreover, the unique data characteristics present in scRNA-seq including sparsity and heterogeneity gain the challenge.
 
 ## Introduction
@@ -77,7 +77,7 @@ In the context of differential expression (DE) analysis, scientists are usually 
 
 In the first scenario, the numbers of cells for a particular cell type in different biological conditions are often similar, barring significant changes in cell composition. It uses one cell type as the benchmark data and perturbs the genes with mixture proportion ($\pi$) and log fold changes ($lfc$) as the DE genes according two forms. 
 
-```{r two-group, eval = TRUE}
+```{r two-group, eval = TRUE, message=FALSE, results='hide'}
 # Users can customize how many cells they need as to change the number of n. 
 simData = Simulate2SCE(n=100, estParas1 = est_Paras, estParas2 = est_Paras)
 de = runDE(simData$sce, DE_Method = "MAST")
@@ -85,12 +85,12 @@ estPower1 = Power_Disc(de, simData = simData)
 estPower2 = Power_Cont(de, simData = simData)
 ```
 
-###For multiple-group comparisons
-In the second scenario, the numbers of cells for distinct cell types can be very different, so the power for DE highly depends on the mixing proportions. The sample data GSE67835 can be download here: https://www.dropbox.com/s/55zdktqfqiwfs3l/GSE67835.RData?dl=0. 
-```{r multiple-group, eval = FALSE}
-sim_size = 1000
+### For multiple-group comparisons
+In the second scenario, the numbers of cells for distinct cell types can be very different, so the power for DE highly depends on the mixing proportions. Here, we use 1000*57 expression matrix sampled from the patient ID AB_S7 from the GSE67835 data. The original data GSE67835 can be download here: https://www.dropbox.com/s/55zdktqfqiwfs3l/GSE67835.RData?dl=0. 
+```{r multiple-group, eval = TRUE, message=FALSE, results='hide'}
+data("GSE67835_AB_S7_sce")
+sim_size = 200 # use a large sample is preferrable
 cell_per = c(0.2, 0.3, 0.5)
-load("pathto/GSE67835.RData")
 col = colData(sce)
 exprs = assays(sce)$counts
 (tb = table(colData(sce)$Patients, colData(sce)$cellTypes))
@@ -107,14 +107,14 @@ for (cp in celltypes){
 ######### 
 #########  Simulation part
 ######### 
-sim = SimulateMultiSCEs(n = 6000, estParas_set = estParas_set, multiProb = cell_per)
+sim = SimulateMultiSCEs(n = sim_size, estParas_set = estParas_set, multiProb = cell_per)
 
 ######### 
 #########  DE analysis part
 ######### 
 DE_rslt = NULL
 for (comp in names(sim)){
-    tmp = runMAST(sim[[comp]]$sce)
+    tmp = runDE(sim[[comp]]$sce, DE_Method = "MAST")
     DE_rslt[[comp]] = tmp
 }
 
@@ -142,13 +142,12 @@ breaksList = seq(0, 1, by = 0.01)
 colors = colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(length(breaksList))
 dimnames(pow1) = list(names(sim), names(tmp1$CD))
 dimnames(pow2) = list(names(sim), names(tmp2$CD))
-pheatmap(pow1, display_numbers = T, color=colors, show_rownames = T,
-         cellwidth = 50, cellheight = 50, legend = T,
+pheatmap(pow2, display_numbers = TRUE, color=colors, show_rownames = TRUE,
+         cellwidth = 30, cellheight = 40, legend = TRUE,
          border_color = "grey96", na_col = "grey",
          cluster_row = FALSE, cluster_cols = FALSE,
          breaks = seq(0, 1, 0.01),
          main = "")
-
 ```
 
 ## Session Info
